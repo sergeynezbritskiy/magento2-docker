@@ -6,7 +6,7 @@ RUN apt install cron libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-d
 RUN docker-php-ext-install bcmath gd intl mbstring pdo_mysql soap sockets xsl zip
 
 #install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --version="2.2.18" --install-dir=/usr/local/bin --filename=composer
 
 ENTRYPOINT ["docker-php-entrypoint"]
 CMD ["php-fpm"]
