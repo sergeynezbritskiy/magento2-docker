@@ -9,4 +9,4 @@ RUN docker-php-ext-install bcmath gd intl mbstring pdo_mysql soap sockets xsl zi
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["php", "-a"]
+CMD ["php-fpm"]
