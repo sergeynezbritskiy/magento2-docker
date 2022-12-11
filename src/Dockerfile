@@ -47,7 +47,7 @@ RUN docker-php-ext-install gd
 
 RUN rm -rf /var/lib/apt/lists/*
 
-# install xdebug
+# install xdebug extension
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 ADD docker-php-ext-xdebug.ini /docker-php-ext-xdebug.ini
@@ -55,12 +55,31 @@ ARG XDEBUG_ENABLED
 ENV XDEBUG_ENABLED ${XDEBUG_ENABLED}
 ENV PHP_IDE_CONFIG "serverName=php.magento2"
 
-#RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-#RUN docker-php-ext-configure opcache --enable-opcache
-#RUN docker-php-ext-configure zip --with-zip
-#
-#RUN docker-php-ext-install intl mbstring pdo_mysql soap sockets xsl zip
-#RUN docker-php-ext-install bcmath
+# install intl extension
+RUN docker-php-ext-install intl
+
+# install pdo_mysql extension
+RUN docker-php-ext-install pdo_mysql
+
+# install zip extension
+RUN apt update
+RUN apt upgrade --yes
+RUN apt install --yes --no-install-recommends libzip-dev
+RUN docker-php-ext-install zip
+
+# install soap extension
+RUN apt install --yes --no-install-recommends libxml2-dev
+RUN docker-php-ext-install soap
+
+# install xsl extension
+RUN apt install --yes --no-install-recommends libxslt1-dev
+RUN docker-php-ext-install xsl
+
+# install bcmatch extension
+RUN docker-php-ext-install bcmath
+
+# install sockets extension
+RUN docker-php-ext-install sockets
 
 #RUN pecl install -o -f \
 ##  geoip-1.1.1 \
@@ -114,6 +133,8 @@ ENV PHP_IDE_CONFIG "serverName=php.magento2"
 # add apache user
 RUN adduser apache
 RUN echo '%apache ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN sed -i "s/user =.*/user = apache/" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/group =.*/group = apache/" /usr/local/etc/php-fpm.d/www.conf
 USER apache
 
 # run the container
