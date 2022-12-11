@@ -48,9 +48,12 @@ RUN docker-php-ext-install gd
 RUN rm -rf /var/lib/apt/lists/*
 
 # install xdebug
-RUN pecl install xdebug \
-RUN  docker-php-ext-enable xdebug
-ADD docker-xdebug.ini /usr/local/etc/php/conf.d/docker-xdebug.ini
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+ADD docker-php-ext-xdebug.ini /docker-php-ext-xdebug.ini
+ARG XDEBUG_ENABLED
+ENV XDEBUG_ENABLED ${XDEBUG_ENABLED}
+ENV PHP_IDE_CONFIG "serverName=php.magento2"
 
 #RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 #RUN docker-php-ext-configure opcache --enable-opcache
@@ -113,5 +116,8 @@ RUN adduser apache
 RUN echo '%apache ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER apache
 
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["php-fpm"]
+# run the container
+#ENTRYPOINT ["docker-php-entrypoint"]
+ADD start.sh /start.sh
+RUN sudo chmod +x /start.sh
+CMD ["/start.sh"]
