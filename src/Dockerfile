@@ -13,11 +13,42 @@ RUN curl -sS https://getcomposer.org/installer | php -- --version="2.2.18" --ins
 # increase php memory limit
 RUN echo 'memory_limit=2G' >> /usr/local/etc/php/conf.d/docker-php-ram-limit.ini
 
-# install gd
+# install xdebug extension
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+ADD docker-php-ext-xdebug.ini /docker-php-ext-xdebug.ini
+ARG XDEBUG_ENABLED
+ENV XDEBUG_ENABLED ${XDEBUG_ENABLED}
+ENV PHP_IDE_CONFIG "serverName=php.magento2"
+
+# install gd extension
 RUN apt install libfreetype6-dev libpng-dev libwebp-dev libicu-dev libjpeg62-turbo-dev --yes
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
 RUN docker-php-ext-install gd
 
+# install zip extension
+RUN apt install --yes --no-install-recommends libzip-dev
+RUN docker-php-ext-install zip
+
+# install soap extension
+RUN apt install --yes --no-install-recommends libxml2-dev
+RUN docker-php-ext-install soap
+
+# install xsl extension
+RUN apt install --yes --no-install-recommends libxslt1-dev
+RUN docker-php-ext-install xsl
+
+# install intl extension
+RUN docker-php-ext-install intl
+
+# install bcmatch extension
+RUN docker-php-ext-install bcmath
+
+# install sockets extension
+RUN docker-php-ext-install sockets
+
+# install pdo_mysql extension
+RUN docker-php-ext-install pdo_mysql
 
 #RUN apt install --yes --no-install-recommends apt-utils
 #RUN apt install --yes --no-install-recommends sendmail-bin
@@ -44,42 +75,6 @@ RUN docker-php-ext-install gd
 #RUN apt install --yes --no-install-recommends libyaml-dev
 #RUN apt install --yes --no-install-recommends libzip-dev
 #RUN apt install --yes --no-install-recommends libonig-dev
-
-RUN rm -rf /var/lib/apt/lists/*
-
-# install xdebug extension
-RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
-ADD docker-php-ext-xdebug.ini /docker-php-ext-xdebug.ini
-ARG XDEBUG_ENABLED
-ENV XDEBUG_ENABLED ${XDEBUG_ENABLED}
-ENV PHP_IDE_CONFIG "serverName=php.magento2"
-
-# install intl extension
-RUN docker-php-ext-install intl
-
-# install pdo_mysql extension
-RUN docker-php-ext-install pdo_mysql
-
-# install zip extension
-RUN apt update
-RUN apt upgrade --yes
-RUN apt install --yes --no-install-recommends libzip-dev
-RUN docker-php-ext-install zip
-
-# install soap extension
-RUN apt install --yes --no-install-recommends libxml2-dev
-RUN docker-php-ext-install soap
-
-# install xsl extension
-RUN apt install --yes --no-install-recommends libxslt1-dev
-RUN docker-php-ext-install xsl
-
-# install bcmatch extension
-RUN docker-php-ext-install bcmath
-
-# install sockets extension
-RUN docker-php-ext-install sockets
 
 #RUN pecl install -o -f \
 ##  geoip-1.1.1 \
@@ -129,6 +124,8 @@ RUN docker-php-ext-install sockets
 #RUN docker-php-ext-install bcmath
 #RUN docker-php-ext-install intl mbstring pdo_mysql soap sockets xsl zip
 
+# remove redundand apt artifacts
+RUN rm -rf /var/lib/apt/lists/*
 
 # add apache user
 RUN adduser apache
@@ -138,7 +135,6 @@ RUN sed -i "s/group =.*/group = apache/" /usr/local/etc/php-fpm.d/www.conf
 USER apache
 
 # run the container
-#ENTRYPOINT ["docker-php-entrypoint"]
 ADD start.sh /start.sh
 RUN sudo chmod +x /start.sh
 CMD ["/start.sh"]
