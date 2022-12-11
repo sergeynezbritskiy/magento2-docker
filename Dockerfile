@@ -4,52 +4,8 @@ LABEL maintaner="Sergey Nezbritskiy"
 RUN apt update
 RUN apt upgrade --yes
 
-RUN apt install -y --no-install-recommends \
-  apt-utils \
-  sendmail-bin \
-  sendmail \
-  sudo \
-  iproute2 \
-  git \
-  gnupg2 \
-  ca-certificates \
-  lsb-release \
-  software-properties-common \
-  libbz2-dev \
-  libjpeg62-turbo-dev \
-  libpng-dev \
-  libfreetype6-dev \
-  libgeoip-dev \
-  wget \
-  libgmp-dev \
-  libgpgme11-dev \
-  libmagickwand-dev \
-  libmagickcore-dev \
-  libc-client-dev \
-  libkrb5-dev \
-  libicu-dev \
-  libldap2-dev \
-  libpspell-dev \
-  librecode0 \
-  librecode-dev \
-  libtidy-dev \
-  libxslt1-dev \
-  libyaml-dev \
-  libzip-dev \
-  zip \
-  libwebp-dev \
-  libonig-dev \
-  && rm -rf /var/lib/apt/lists/*
-
-
-RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
-RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-RUN docker-php-ext-configure opcache --enable-opcache
-RUN docker-php-ext-configure zip --with-zip
-
-RUN docker-php-ext-install intl mbstring pdo_mysql soap sockets xsl zip
-RUN docker-php-ext-install bcmath
-
+# install usefull utilities
+RUN apt install --yes --no-install-recommends sudo cron nano htop vim wget git zip unzip git mariadb-client-10.5
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --version="2.2.18" --install-dir=/usr/local/bin --filename=composer
@@ -57,8 +13,51 @@ RUN curl -sS https://getcomposer.org/installer | php -- --version="2.2.18" --ins
 # increase php memory limit
 RUN echo 'memory_limit=2G' >> /usr/local/etc/php/conf.d/docker-php-ram-limit.ini
 
+# install gd
+RUN apt install libfreetype6-dev libpng-dev libwebp-dev libicu-dev libjpeg62-turbo-dev --yes
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
 RUN docker-php-ext-install gd
+
+
+#RUN apt install --yes --no-install-recommends apt-utils
+#RUN apt install --yes --no-install-recommends sendmail-bin
+#RUN apt install --yes --no-install-recommends sendmail
+#RUN apt install --yes --no-install-recommends iproute2
+#RUN apt install --yes --no-install-recommends gnupg2
+#RUN apt install --yes --no-install-recommends ca-certificates
+#RUN apt install --yes --no-install-recommends lsb-release
+#RUN apt install --yes --no-install-recommends software-properties-common
+#RUN apt install --yes --no-install-recommends libbz2-dev
+#RUN apt install --yes --no-install-recommends libgeoip-dev
+#RUN apt install --yes --no-install-recommends libgmp-dev
+#RUN apt install --yes --no-install-recommends libgpgme11-dev
+#RUN apt install --yes --no-install-recommends libmagickwand-dev
+#RUN apt install --yes --no-install-recommends libmagickcore-dev
+#RUN apt install --yes --no-install-recommends libc-client-dev
+#RUN apt install --yes --no-install-recommends libkrb5-dev
+#RUN apt install --yes --no-install-recommends libldap2-dev
+#RUN apt install --yes --no-install-recommends libpspell-dev
+#RUN apt install --yes --no-install-recommends librecode0
+#RUN apt install --yes --no-install-recommends librecode-dev
+#RUN apt install --yes --no-install-recommends libtidy-dev
+#RUN apt install --yes --no-install-recommends libxslt1-dev
+#RUN apt install --yes --no-install-recommends libyaml-dev
+#RUN apt install --yes --no-install-recommends libzip-dev
+#RUN apt install --yes --no-install-recommends libonig-dev
+
+RUN rm -rf /var/lib/apt/lists/*
+
+# install xdebug
+RUN pecl install xdebug \
+RUN  docker-php-ext-enable xdebug
+ADD docker-xdebug.ini /usr/local/etc/php/conf.d/docker-xdebug.ini
+
+#RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+#RUN docker-php-ext-configure opcache --enable-opcache
+#RUN docker-php-ext-configure zip --with-zip
+#
+#RUN docker-php-ext-install intl mbstring pdo_mysql soap sockets xsl zip
+#RUN docker-php-ext-install bcmath
 
 #RUN pecl install -o -f \
 ##  geoip-1.1.1 \
@@ -103,17 +102,11 @@ RUN docker-php-ext-install gd
 #  pcntl
 
 
-#RUN apt install sudo cron nano vi libfreetype6-dev libpng-dev libwebp-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libxslt1-dev zip unzip git mariadb-client-10.5 libonig-dev libzip-dev --yes
+#RUN apt install vi libmcrypt-dev libxslt1-dev libonig-dev libzip-dev --yes
 
 #RUN docker-php-ext-install bcmath
 #RUN docker-php-ext-install intl mbstring pdo_mysql soap sockets xsl zip
 
-#RUN apt update
-#RUN apt install sudo
-#
-#RUN apt install libfreetype6-dev libpng-dev libwebp-dev libicu-dev libjpeg62-turbo-dev --yes
-#RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
-#RUN docker-php-ext-install gd
 
 # add apache user
 RUN adduser apache
