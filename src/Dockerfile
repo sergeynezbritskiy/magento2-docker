@@ -56,6 +56,9 @@ RUN echo "postfix postfix/main_mailer_type string 'Magento2 Site'" | debconf-set
 RUN apt install --yes --no-install-recommends postfix
 ADD postfix/main.cf /etc/postfix/main.cf
 ADD postfix/master.cf /etc/postfix/master.cf
+# test that emails are sending
+# echo test | sendmail some.email@tenminutesemail.com
+# check the status by running `postqueue -p`
 
 #RUN apt install --yes --no-install-recommends apt-utils
 #RUN apt install --yes --no-install-recommends sendmail-bin
