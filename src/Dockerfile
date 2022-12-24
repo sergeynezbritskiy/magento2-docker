@@ -5,7 +5,7 @@ RUN apt update
 RUN apt upgrade --yes
 
 # install usefull utilities
-RUN apt install --yes --no-install-recommends sudo cron nano htop vim wget git zip unzip git mariadb-client-10.5
+RUN apt install --yes --no-install-recommends sudo cron nano htop vim procps wget git zip unzip git mariadb-client-10.5
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --version="2.2.18" --install-dir=/usr/local/bin --filename=composer
@@ -49,6 +49,13 @@ RUN docker-php-ext-install sockets
 
 # install pdo_mysql extension
 RUN docker-php-ext-install pdo_mysql
+
+# install and configure postfix
+RUN echo "postfix postfix/mailname string magento2.local" | debconf-set-selections
+RUN echo "postfix postfix/main_mailer_type string 'Magento2 Site'" | debconf-set-selections
+RUN apt install --yes --no-install-recommends postfix
+ADD postfix/main.cf /etc/postfix/main.cf
+ADD postfix/master.cf /etc/postfix/master.cf
 
 #RUN apt install --yes --no-install-recommends apt-utils
 #RUN apt install --yes --no-install-recommends sendmail-bin

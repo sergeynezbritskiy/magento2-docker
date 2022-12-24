@@ -1,0 +1,11 @@
+compatibility_level = 2
+queue_directory = /var/spool/postfix
+data_directory = /var/lib/postfix
+mail_owner = postfix
+maillog_file = /dev/stdout
+mynetworks = 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+relayhost = [mail]:1025
+myhostname = magento2.local
+setgid_group = postdrop
+inet_protocols = ipv4
+mail_name = My mail relay

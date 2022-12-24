@@ -6,5 +6,6 @@ else
   sudo rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 fi
 
+sudo /usr/sbin/postfix start
 sudo /usr/local/sbin/php-fpm
 /bin/bash
