@@ -9,5 +9,8 @@ fi
 
 echo "Releasing version \`${VERSION}\`"
 
-docker build ./src --tag=sergeynezbritskiy/php-magento2:"${VERSION}"
-docker push sergeynezbritskiy/php-magento2:"${VERSION}"
+docker build --build-arg PHP_VERSION=8.3 ./src --tag=sergeynezbritskiy/magento2-php83:"${VERSION}"
+docker push sergeynezbritskiy/magento2-php83:"${VERSION}"
+
+docker build --build-arg PHP_VERSION=8.3 ./src --tag=sergeynezbritskiy/magento2-php83:"latest"
+docker push sergeynezbritskiy/magento2-php83:"latest"
