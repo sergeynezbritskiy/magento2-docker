@@ -67,6 +67,7 @@ RUN export XDEBUG_INI="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini" && \
     echo 'xdebug.start_with_request=yes' >> ${XDEBUG_INI} && \
     echo 'xdebug.idekey="PHPSTORM"' >> ${XDEBUG_INI} && \
     echo 'xdebug.discover_client_host=1' >> ${XDEBUG_INI} && \
+    echo 'env[PHP_IDE_CONFIG]="magento"' >> /usr/local/etc/php-fpm.d/www.conf && \
     cp ${XDEBUG_INI} ${XDEBUG_INI}.tmpl && \
     xdebug off
 
