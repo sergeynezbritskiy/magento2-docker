@@ -8,7 +8,7 @@ fi
 
 # TODO implement handling of PHP_XDEBUG_CONNECT_BACK_HOST that defaults to "172.18.0.1"
 
-sudo sed -i "s/env\[PHP_IDE_CONFIG\]=.*/env[PHP_IDE_CONFIG]=\"${PHP_IDE_CONFIG}\"/g"  /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "s/env\[PHP_IDE_CONFIG\]=.*/env[PHP_IDE_CONFIG]=\"${PHP_IDE_CONFIG}\"/g" /usr/local/etc/php-fpm.d/www.conf
 
 # TODO implement handling of
 #      - SMTP_HOST=${PROJECT_NAME}-mailpit

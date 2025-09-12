@@ -28,36 +28,10 @@ RUN apt install --yes --no-install-recommends \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN install-php-extensions @composer
-
-RUN install-php-extensions redis
-
-RUN install-php-extensions ssh2
-
-RUN install-php-extensions xdebug
-
-RUN install-php-extensions bcmath
-
-RUN install-php-extensions intl
-
-RUN install-php-extensions zip
-
-RUN install-php-extensions ftp
-
-RUN install-php-extensions gd
-
-RUN install-php-extensions pdo_mysql
-
-RUN install-php-extensions soap
-
-RUN install-php-extensions xsl
-
-RUN install-php-extensions sockets
+RUN install-php-extensions @composer redis ssh2 xdebug bcmath intl zip ftp gd pdo_mysql soap xsl sockets
 
 COPY /utils /utils
 RUN chmod -R +x /utils && ln -s /utils/restart.sh /usr/bin/restart && ln -s /utils/xdebug.sh /usr/bin/xdebug
-
-ENV PHP_IDE_CONFIG="serverName=php.magento2"
 
 RUN export XDEBUG_INI="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini" && \
     echo 'xdebug.max_nesting_level = -1' >> ${XDEBUG_INI} && \
@@ -67,7 +41,6 @@ RUN export XDEBUG_INI="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini" && \
     echo 'xdebug.start_with_request=yes' >> ${XDEBUG_INI} && \
     echo 'xdebug.idekey="PHPSTORM"' >> ${XDEBUG_INI} && \
     echo 'xdebug.discover_client_host=1' >> ${XDEBUG_INI} && \
-    echo 'env[PHP_IDE_CONFIG]="magento"' >> /usr/local/etc/php-fpm.d/www.conf && \
     cp ${XDEBUG_INI} ${XDEBUG_INI}.tmpl && \
     xdebug off
 
@@ -76,6 +49,13 @@ RUN groupadd magento && \
     usermod -aG sudo magento && \
     echo 'magento ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/magento && \
     chmod 0440 /etc/sudoers.d/magento
+
+ENV PHP_IDE_CONFIG="serverName=php.magento2"
+
+RUN export WWW_CONF="/usr/local/etc/php-fpm.d/www.conf" && \
+    echo "env[PHP_IDE_CONFIG]=\"${PHP_IDE_CONFIG}\"" >> ${WWW_CONF} && \
+    sed -i "s/user = .*/user = magento/g" ${WWW_CONF} && \
+    sed -i "s/group = .*/group = magento/g"  ${WWW_CONF}
 
 USER magento
 
