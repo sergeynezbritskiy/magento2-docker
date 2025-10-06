@@ -4,10 +4,10 @@ LABEL maintaner="Sergey Nezbritskiy"
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN apt update && apt upgrade --yes
+RUN apt-get update && apt-get upgrade --yes
 
 # install usefull utilities
-RUN apt install --yes --no-install-recommends \
+RUN apt-get install --yes --no-install-recommends \
     cron \
     curl \
     default-mysql-client \

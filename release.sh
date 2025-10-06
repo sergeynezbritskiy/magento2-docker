@@ -1,16 +1,24 @@
 #!/bin/bash
 
-VERSION=$1
-
-if [ -z "${VERSION}" ]; then
+PHP=$1
+if [ -z "${PHP}" ]; then
   # shellcheck disable=SC2162
-  read -p "Specify release version: " VERSION
+  read -p "Specify PHP version (in dot separated format, e.g. 8.1, 8.2, 8.3): " PHP
 fi
 
-echo "Releasing version \`${VERSION}\`"
+TAG=$2
+if [ -z "${TAG}" ]; then
+  # shellcheck disable=SC2162
+  read -p "Specify release tag: " TAG
+fi
 
-docker build --build-arg PHP_VERSION=8.3 ./src --tag=sergeynezbritskiy/magento2-php83:"${VERSION}"
-docker push sergeynezbritskiy/magento2-php83:"${VERSION}"
+echo "Releasing tag \`${TAG}\` for PHP ${PHP}"
 
-docker build --build-arg PHP_VERSION=8.3 ./src --tag=sergeynezbritskiy/magento2-php83:"latest"
-docker push sergeynezbritskiy/magento2-php83:"latest"
+IMAGE_NAME=$(echo "${PHP}" | tr -cd '[:digit:]')
+IMAGE_NAME="sergeynezbritskiy/magento2-php${IMAGE_NAME}"
+
+docker build --build-arg PHP_VERSION="${PHP}" ./src --tag=${IMAGE_NAME}:"${TAG}"
+docker push ${IMAGE_NAME}:"${TAG}"
+
+docker build --build-arg PHP_VERSION=8.4 ./src --tag=${IMAGE_NAME}:"latest"
+docker push ${IMAGE_NAME}:"latest"
