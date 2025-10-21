@@ -24,6 +24,7 @@ RUN apt-get install --yes --no-install-recommends \
     vim \
     wget \
     zip \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
