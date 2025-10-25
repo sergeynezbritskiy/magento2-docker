@@ -20,5 +20,5 @@ IMAGE_NAME="sergeynezbritskiy/magento2-php${IMAGE_NAME}"
 docker build --build-arg PHP_VERSION="${PHP}" ./src --tag=${IMAGE_NAME}:"${TAG}"
 docker push ${IMAGE_NAME}:"${TAG}"
 
-docker build --build-arg PHP_VERSION=8.4 ./src --tag=${IMAGE_NAME}:"latest"
+docker build --build-arg PHP_VERSION=${PHP} ./src --tag=${IMAGE_NAME}:"latest"
 docker push ${IMAGE_NAME}:"latest"
