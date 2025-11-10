@@ -32,7 +32,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 RUN install-php-extensions @composer redis ssh2 xdebug bcmath intl zip ftp gd pdo_mysql soap xsl sockets
 
 COPY /utils /utils
-RUN chmod -R +x /utils && ln -s /utils/restart.sh /usr/bin/restart && ln -s /utils/xdebug.sh /usr/bin/xdebug
+RUN chmod -R +x /utils && ln -s /utils/restart.sh /usr/bin/restart && ln -s /utils/xdebug.sh /usr/bin/xdebug && ln -s /utils/profiler.sh /usr/bin/profiler
 
 RUN export XDEBUG_INI="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini" && \
     echo 'xdebug.max_nesting_level = -1' >> ${XDEBUG_INI} && \
