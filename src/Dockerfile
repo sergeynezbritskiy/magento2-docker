@@ -4,6 +4,13 @@ LABEL maintaner="Sergey Nezbritskiy"
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
+RUN PHP_VERSION_ID=$(php -r "echo PHP_VERSION_ID;") && \
+    if [ "$PHP_VERSION_ID" -lt 80000 ]; then \
+      sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g' /etc/apt/sources.list && \
+      sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+      echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99disable-check-valid; \
+    fi
+
 RUN apt-get update && apt-get upgrade --yes
 
 # install usefull utilities
@@ -50,6 +57,7 @@ RUN groupadd magento && \
     usermod -aG sudo magento && \
     echo 'magento ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/magento && \
     chmod 0440 /etc/sudoers.d/magento
+
 
 ENV PHP_IDE_CONFIG="serverName=php.magento2"
 
