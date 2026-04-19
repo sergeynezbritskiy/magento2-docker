@@ -1,6 +1,6 @@
 ARG PHP_VERSION="8.1"
 FROM php:${PHP_VERSION}-fpm
-LABEL maintaner="Sergey Nezbritskiy"
+LABEL maintaner="Sergiy Nezbritskiy"
 
 ENV DEBIAN_FRONTEND="noninteractive"
 

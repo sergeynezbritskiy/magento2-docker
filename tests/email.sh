@@ -1,5 +1,5 @@
 /usr/sbin/sendmail -i -t << MESSAGE_END
-From: sergey.nezbritskiy.es@gmail.com
+From: sergiy.nezbritskiy.es@gmail.com
 To: kthyghyfbsoxnxzpno@tmmcv.com
 
 Hi, this is my message,
