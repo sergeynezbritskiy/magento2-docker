@@ -38,8 +38,9 @@ fi
 sudo postconf -e "inet_interfaces = all"
 sudo postconf -e "compatibility_level = 2"
 
-###########################
-# start postfix and php-fpm
-###########################
+#################################
+# start cron, postfix and php-fpm
+#################################
+sudo /usr/sbin/cron
 sudo /usr/sbin/postfix start
 sudo /usr/local/sbin/php-fpm -F -c /usr/local/etc/php/php.ini
